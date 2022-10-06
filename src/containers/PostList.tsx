@@ -1,14 +1,20 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { Post } from '../interfaces/post';
+import PostDataView from './PostDataView';
 
-// interface FilesListProps {
-//     files: File[];
-//     handleFileRemoval: (id: string) => void;
-// }
+interface PostListProps {
+	posts: Post[];
+	handlePostRemoval: (postId: number) => void;
+}
 
-const FilesList = () => {
-    return <div></div>;
+export const PostList = ({ posts, handlePostRemoval }: PostListProps) => {
+	return (
+		<div>
+			<div>
+				{posts.map(post => (
+					<PostDataView post={post} handlePostRemoval={handlePostRemoval} />
+				))}
+			</div>
+		</div>
+	);
 };
-
-export default FilesList;
 

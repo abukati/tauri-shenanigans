@@ -5,48 +5,19 @@ import Header from './containers/Header';
 import AppContent from './containers/AppContent';
 import useLocalStorageState from './hooks/useLocalStorageState';
 import { Post, PostsResponse } from './interfaces/post';
+import { PostInfo } from './components/Posts';
 
 function App() {
-	// const [posts, setPosts] = useLocalStorageState<Post[]>('posts', []);
-	const [posts, setPosts] = useState<Post[]>([]);
 	const [isExpanded, setIsExpanded] = useState(false);
-
-	const handlePostRemoval = (postId: number) => {
-		const newPosts = posts.filter(post => post.id !== postId);
-		setPosts(newPosts);
-	};
 
 	const handleSideMenuToggle = () => {
 		setIsExpanded(p => !p);
 	};
 
-	const handlePostsPopulation = (newPosts: Post[]) => {
-		setPosts(newPosts);
-	};
-
-	const fetchPosts = () => {
-		fetch('https://dummyjson.com/posts')
-			.then(res => {
-				if (!res.ok) {
-					throw new Error(res.statusText);
-				}
-				return res.json() as Promise<PostsResponse>;
-			})
-			.then(data => {
-				handlePostsPopulation(data.posts);
-			});
-	};
-
 	return (
 		<AppWrapper>
 			<Header />
-			<AppContent
-				fetchPosts={fetchPosts}
-				posts={posts}
-				handlePostRemoval={handlePostRemoval}
-				isExpanded={isExpanded}
-				handleSideMenuToggle={handleSideMenuToggle}
-			/>
+			<PostInfo />
 		</AppWrapper>
 	);
 }
