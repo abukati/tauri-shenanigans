@@ -6,6 +6,7 @@ import { invoke } from '@tauri-apps/api/tauri';
 export const PostInfo = () => {
 	// const [posts, setPosts] = useLocalStorageState<Post[]>('posts', []);
 	const [posts, setPosts] = useState<Post[]>([]);
+	const [hello, setHello] = useState('');
 	const [isFetching, setIsFetching] = useState(false);
 	const [{ status, error }, setApiStatus] = useState({
 		status: isFetching ? 'pending' : 'idle',
@@ -40,7 +41,8 @@ export const PostInfo = () => {
 		setPosts(newPosts);
 	}
 
-	function handlePostsPopulation(newPosts: Post[]) {
+	async function handlePostsPopulation(newPosts: Post[]) {
+		setHello(await invoke('greet'));
 		invoke('scan_folder');
 		setIsFetching(false);
 		setPosts(newPosts);
@@ -48,7 +50,8 @@ export const PostInfo = () => {
 
 	if (status === 'idle') return <button onClick={() => setIsFetching(true)}>fetch</button>;
 	else if (status === 'pending') return <div>Loading...</div>;
-	else if (status === 'resolved') return <PostList posts={posts} handlePostRemoval={handlePostRemoval} />;
+	else if (status === 'resolved') return <div>{hello}</div>;
+	// <PostList posts={posts} handlePostRemoval={handlePostRemoval} />;
 	else if (status === 'rejected') throw error;
 	throw new Error('Should not happen');
 };
