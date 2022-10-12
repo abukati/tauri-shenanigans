@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { PostList } from '../containers/PostList';
 import { Post, PostsResponse } from '../interfaces/post';
+import { invoke } from '@tauri-apps/api/tauri';
 
 export const PostInfo = () => {
 	// const [posts, setPosts] = useLocalStorageState<Post[]>('posts', []);
@@ -40,6 +41,7 @@ export const PostInfo = () => {
 	}
 
 	function handlePostsPopulation(newPosts: Post[]) {
+		invoke('scan_folder');
 		setIsFetching(false);
 		setPosts(newPosts);
 	}

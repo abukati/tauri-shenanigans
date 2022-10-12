@@ -16,7 +16,7 @@ const AppContent = ({ fetchPosts, posts, handlePostRemoval, isExpanded, handleSi
 		<MainContentWrapper>
 			{/* <SideMenuWrapper isExpanded={isExpanded}>sdasd</SideMenuWrapper> */}
 			{/* <button onClick={handleSideMenuToggle}>toggle menu</button> */}
-			{posts.length < 1 && <button onClick={fetchPosts}>fetch</button>}
+			{!posts && <button onClick={fetchPosts}>fetch</button>}
 			{posts && (
 				<div>
 					{posts.map(post => (
