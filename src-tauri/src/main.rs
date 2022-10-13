@@ -4,15 +4,42 @@
 )]
 
 use scan_dir::ScanDir;
+use rmp_serde::{Deserializer, Serializer};
+use serde::{Serialize, Deserialize};
+use std::collections::HashMap;
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct File {
+    name: String,
+    file_size: String,
+}
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn scan_folder() {
+fn scan_folder() -> Vec<HashMap<String, String>> {
+    let mut files: Vec<HashMap<String, String>> = Vec::new();
+
     ScanDir::files().read("../../../../../Downloads", |iter| {
         for (entry, name) in iter {
             println!("File {:?} has path {:?}, metadata {:?}", name, entry.path(), entry.metadata().unwrap());
+            
+            let file_size: String = entry.metadata().unwrap().len().to_string();
+            let mut buf: Vec<u8> = Vec::new();
+            let mut val: HashMap<&str, String> = HashMap::new();
+
+            val.insert("name", name);
+            val.insert("file_size", file_size);
+            val.serialize(&mut Serializer::new(&mut buf)).unwrap();
+
+            let test: HashMap<String, String> = Deserialize::deserialize(&mut Deserializer::new(&buf[..])).unwrap();
+
+            files.push(test);
         }
     }).unwrap();
+    files
+
+
+
     // ScanDir::dirs().read("../../../../../Downloads", |iter| {
     //     for (entry, name) in iter {
     //         println!("File {:?} has path {:?}, metadata {:?}", name, entry.path(), entry.metadata().unwrap());
